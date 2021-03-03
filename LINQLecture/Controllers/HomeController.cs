@@ -254,6 +254,45 @@ namespace LINQLecture.Controllers
          return View("PartsGroup", model);
       }
 
+      public IActionResult Misc()
+      {
+         int[] twos = { 0, 2, 4, 6, 8, 10, 12, 14 };
+         string[] strings = { "one", "two", "hiya", "flowers" };
+         var data = new StringBuilder();
+         data.Append("Twos: " + string.Join(",", twos) + "\n");
+         data.Append("Strings: " + string.Join(",", strings) + "\n");
+         data.Append('\n');
+
+         data.Append("Element\n");
+         var e1 = twos.ElementAt(4); // 8
+         var e2 = strings.FirstOrDefault(s => s.StartsWith("h")); // hiya
+         data.Append($"Element at index 4: {e1}\n");
+         data.Append($"First string that starts with h: {e2}\n");
+         data.Append('\n');
+
+         data.Append("Partitioning\n");
+         var p1 = twos.Take(5); // Take the first 5 elements
+         data.Append("Taking first 5 elements from twos");
+         data.Append(string.Join(",", p1));
+         data.Append('\n');
+
+         data.Append("\nConcatenation\n");
+         var twosAsStrings = twos.Select(n => Convert.ToString(n));
+         var c1 = twosAsStrings.Concat(strings);
+         data.Append(string.Join(",", c1));
+         data.Append('\n');
+
+         data.Append("\nAggregation\n");
+         data.Append("Twos: " + string.Join(",", twos) + "\n");
+         data.Append($"Average: {twos.Average()}");
+         data.Append($"\nCount: {twos.Count()}");
+         data.Append($"\nMax: {twos.Max()}");
+         data.Append($"\nMin: {twos.Min()}");
+         data.Append($"\nSum: {twos.Sum()}");
+
+         return Content(data.ToString());
+      }
+
 
       public IActionResult ExtensionMethodExamples()
       {
