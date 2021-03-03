@@ -232,7 +232,27 @@ namespace LINQLecture.Controllers
          return View("SupplierPartsGroupJoin", model);
       }
 
+      public ActionResult PartsGroupEM()
+      {
+         ViewData["Message"] = "Parts group (EM)";
+         var supplierParts = _supplierPartsRepo
+            .ReadAllSupplierParts().ToList();
+         IEnumerable<IGrouping<string, decimal>> model =
+            supplierParts
+            .GroupBy(sp => sp.Part.Name, sp => sp.Price);
+         return View("PartsGroup", model);
+      }
 
+      public ActionResult PartsGroupQ()
+      {
+         ViewData["Message"] = "Parts group (Q)";
+         var supplierParts = _supplierPartsRepo
+            .ReadAllSupplierParts().ToList();
+         IEnumerable<IGrouping<string, decimal>> model =
+            from sp in supplierParts
+            group sp.Price by sp.Part.Name;
+         return View("PartsGroup", model);
+      }
 
 
       public IActionResult ExtensionMethodExamples()
