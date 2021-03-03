@@ -1,5 +1,7 @@
+using LINQLecture.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,7 +15,9 @@ namespace LINQLecture
    {
       public static void Main(string[] args)
       {
-         CreateHostBuilder(args).Build().Run();
+         var host = CreateHostBuilder(args).Build();
+         SeedData(host);
+         host.Run();
       }
 
       public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -22,5 +26,21 @@ namespace LINQLecture
               {
                  webBuilder.UseStartup<Startup>();
               });
+
+      public static void SeedData(IHost host)
+      {
+         using var scope = host.Services.CreateScope();
+         var services = scope.ServiceProvider;
+         try
+         {
+            var initializer = services.GetRequiredService<Initializer>();
+            initializer.SeedDatabase();
+         }
+         catch (Exception)
+         {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError("An error occurred while seeding the database.");
+         }
+      }
    }
 }
