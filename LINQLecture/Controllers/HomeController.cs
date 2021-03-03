@@ -111,6 +111,58 @@ namespace LINQLecture.Controllers
          return Content(data.ToString());
       }
 
+      public IActionResult Quantifiers()
+      {
+         var data = new StringBuilder();
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         var check = query.Any(sp => sp.Price > 50.0m);
+         if (check)
+         {
+            data.Append("There is a part with a price greater than 50.0.");
+         }
+         data.Append('\n');
+
+         int[] threes = { 0, 3, 6, 9, 12, 15, 18, 21 };
+         data.Append("Threes: " + string.Join(",", threes));
+         check = threes.Contains(14);
+         if (!check)
+         {
+            data.Append(" does not ");
+         }
+         data.Append("contain 14\n");
+
+         return Content(data.ToString());
+      }
+
+      public IActionResult ProjectionEM()
+      {
+         ViewData["Message"] = "Increase part price by 10% (EM)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = query
+           .Select(sp =>
+               new PartNewPriceVM
+               {
+                  Name = sp.Part.Name,
+                  OldPrice = sp.Price,
+                  NewPrice = sp.Price * 1.1m
+               });
+         return View("Projection", model);
+      }
+
+      public IActionResult ProjectionQ()
+      {
+         ViewData["Message"] = "Increase part price by 10% (Q)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = from sp in query
+                     select new PartNewPriceVM
+                     {
+                        Name = sp.Part.Name,
+                        OldPrice = sp.Price,
+                        NewPrice = sp.Price * 1.1m
+                     };
+         return View("Projection", model);
+      }
+
 
       public IActionResult ExtensionMethodExamples()
       {
