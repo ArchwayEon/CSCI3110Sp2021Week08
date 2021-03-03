@@ -197,6 +197,42 @@ namespace LINQLecture.Controllers
          return View("SupplierParts", model);
       }
 
+      public IActionResult SupplierPartsGroupJoinEM()
+      {
+         ViewData["Message"] = "Supplier supplies Parts Group Join (EM)";
+         var suppliers = _supplierPartsRepo.ReadAllSuppliers().ToList();
+         var supplierPartsQry = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = suppliers.GroupJoin(
+                 supplierPartsQry,
+                 s => s.Id, sp => sp.SupplierId,
+                 (s, parts) => new SupplierPartsVM
+                 {
+                    SupplierName = s.Name,
+                    SupplierParts = parts
+                 }
+             );
+         return View("SupplierPartsGroupJoin", model);
+      }
+
+      public IActionResult SupplierPartsGroupJoinQ()
+      {
+         ViewData["Message"] = "Supplier supplies Parts Group Join (Q)";
+         var suppliers = _supplierPartsRepo.ReadAllSuppliers().ToList();
+         var supplierPartsQry = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = from s in suppliers
+                     join sp in supplierPartsQry 
+                     on s.Id equals sp.SupplierId
+                     into parts
+                     select new SupplierPartsVM
+                     {
+                        SupplierName = s.Name,
+                        SupplierParts = parts
+                     };
+
+         return View("SupplierPartsGroupJoin", model);
+      }
+
+
 
 
       public IActionResult ExtensionMethodExamples()
