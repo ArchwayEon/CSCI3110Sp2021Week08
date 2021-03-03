@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace LINQLecture.Controllers
@@ -87,6 +88,29 @@ namespace LINQLecture.Controllers
          GreetWorld("Hi");
          return Content($"5^2={Square(5)} 2^10={Pow(2,10)}");
       }
+
+      public IActionResult Sets()
+      {
+         int[] twos = { 0, 2, 4, 6, 8, 10, 12, 14 };
+         int[] threes = { 0, 3, 6, 9, 12, 15, 18, 21 };
+         var data = new StringBuilder();
+         data.Append("Twos: " + string.Join(",", twos) + "\n");
+         data.Append("Threes: " + string.Join(",", threes) + "\n");
+         data.Append('\n');
+
+         var q1 = twos.Except(threes);
+         data.Append("Twos except threes\n");
+         data.Append(string.Join(",", q1.ToArray()));
+         data.Append('\n');
+
+         var q2 = twos.Intersect(threes);
+         data.Append("Twos intersect threes\n");
+         data.Append(string.Join(",", q2.ToArray()));
+         data.Append('\n');
+
+         return Content(data.ToString());
+      }
+
 
       public IActionResult ExtensionMethodExamples()
       {
