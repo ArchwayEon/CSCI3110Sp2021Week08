@@ -9,5 +9,6 @@ namespace LINQLecture.Services
    public interface ISupplierPartsRepository
    {
       IQueryable<SupplierPart> ReadAllSupplierParts();
+      IQueryable<Supplier> ReadAllSuppliers();
    }
 }

@@ -163,6 +163,41 @@ namespace LINQLecture.Controllers
          return View("Projection", model);
       }
 
+      public IActionResult SupplierPartsEM()
+      {
+         ViewData["Message"] = "Supplier supplies Parts (EM)";
+         var suppliersQry = _supplierPartsRepo.ReadAllSuppliers();
+         var supplierPartsQry = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = suppliersQry.Join(
+                 supplierPartsQry,
+                 s => s.Id, sp => sp.SupplierId,
+                 (s, sp) => new SuppliesVM
+                 {
+                    SupplierName = s.Name,
+                    PartName = sp.Part.Name
+                 }
+             ); // Join
+         return View("SupplierParts", model);
+      }
+
+      public IActionResult SupplierPartsQ()
+      {
+         ViewData["Message"] = "Supplier supplies Parts (Q)";
+         var suppliersQry = _supplierPartsRepo.ReadAllSuppliers();
+         var supplierPartsQry = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = from s in suppliersQry
+                     join sp in supplierPartsQry 
+                     on s.Id equals sp.SupplierId
+                     select new SuppliesVM
+                     {
+                        SupplierName = s.Name,
+                        PartName = sp.Part.Name
+                     };
+
+         return View("SupplierParts", model);
+      }
+
+
 
       public IActionResult ExtensionMethodExamples()
       {

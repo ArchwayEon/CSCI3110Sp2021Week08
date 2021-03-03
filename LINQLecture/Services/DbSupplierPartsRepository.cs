@@ -22,5 +22,13 @@ namespace LINQLecture.Services
 			  .Include(sp => sp.Supplier)
 			  .Include(sp => sp.Part);
 		}
+
+		public IQueryable<Supplier> ReadAllSuppliers()
+		{
+			return _db.Suppliers
+				.Include(s => s.PartsSupplied)
+				.ThenInclude(sp => sp.Part);
+		}
+
 	}
 }
