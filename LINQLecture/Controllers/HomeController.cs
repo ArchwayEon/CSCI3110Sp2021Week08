@@ -1,5 +1,6 @@
 ﻿using LINQLecture.ExtensionClasses;
 using LINQLecture.Models;
+using LINQLecture.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,16 +13,38 @@ namespace LINQLecture.Controllers
 {
    public class HomeController : Controller
    {
+      private readonly ISupplierPartsRepository _supplierPartsRepo;
       private readonly ILogger<HomeController> _logger;
 
-      public HomeController(ILogger<HomeController> logger)
+      public HomeController(ISupplierPartsRepository supplierPartsRepo, ILogger<HomeController> logger)
       {
+         _supplierPartsRepo = supplierPartsRepo;
          _logger = logger;
       }
 
       public IActionResult Index()
       {
          return View();
+      }
+
+      public IActionResult FilteringEM()
+      {
+         ViewData["Message"] = "Parts that cost less than 12.0 (Extension Method syntax)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         // Extension method syntax
+         var model = query.Where(sp => sp.Price < 12.0m);
+         return View("PartSupplierPrice", model);
+      }
+
+      public IActionResult FilteringQ()
+      {
+         ViewData["Message"] = "Parts that cost less than 12.0 (Query syntax)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         // Query syntax
+         var model = from sp in query
+                     where sp.Price < 12.0m
+                     select sp;
+         return View("PartSupplierPrice", model);
       }
 
       public IActionResult LambdaExamples()
