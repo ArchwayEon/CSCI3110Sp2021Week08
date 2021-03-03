@@ -23,6 +23,24 @@ namespace LINQLecture.Controllers
          return View();
       }
 
+      public IActionResult LambdaExamples()
+      {
+         Func<double, double> Square = (x) => x * x;
+         Func<double, double, double> Pow = (x, y) => Math.Pow(x, y);
+         Action HelloWorld = () =>
+         {
+            _logger.LogInformation("Hello, World!");
+         };
+         Action<string> GreetWorld = (message) =>
+         {
+            string greeting = $"{message}, World!";
+            _logger.LogInformation(greeting);
+         };
+         HelloWorld();
+         GreetWorld("Hi");
+         return Content($"5^2={Square(5)} 2^10={Pow(2,10)}");
+      }
+
       public IActionResult Privacy()
       {
          return View();
