@@ -1,4 +1,5 @@
-﻿using LINQLecture.Models;
+﻿using LINQLecture.ExtensionClasses;
+using LINQLecture.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -39,6 +40,18 @@ namespace LINQLecture.Controllers
          HelloWorld();
          GreetWorld("Hi");
          return Content($"5^2={Square(5)} 2^10={Pow(2,10)}");
+      }
+
+      public IActionResult ExtensionMethodExamples()
+      {
+         string name = "Jeffrey"; // The middle character is 'f'
+         // Using the static class with the static method
+         char middle1 = StringExtensionsNotQuite.MiddleChar(name);
+         // Using the static class with the extension method
+         // Note that the extension method is called as if it's part
+         // of the string class
+         char middle2 = name.MiddleChar();
+         return Content($"The middle character of {name} is {middle1} {middle2}");
       }
 
       public IActionResult Privacy()
