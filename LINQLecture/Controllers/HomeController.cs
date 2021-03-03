@@ -47,6 +47,29 @@ namespace LINQLecture.Controllers
          return View("PartSupplierPrice", model);
       }
 
+      public IActionResult SortingEM()
+      {
+         ViewData["Message"] = "Parts sorted by price then by name (EM)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         // Extension method syntax
+         var model = query
+            .OrderBy(sp => sp.Price)
+            .ThenBy(sp => sp.Part.Name);
+         return View("PartSupplierPrice", model);
+      }
+
+      public IActionResult SortingQ()
+      {
+         ViewData["Message"] = "Parts sorted by price then by name (Q)";
+         var query = _supplierPartsRepo.ReadAllSupplierParts();
+         var model = from sp in query
+                     orderby sp.Price, sp.Part.Name
+                     select sp;
+         return View("PartSupplierPrice", model);
+      }
+
+
+
       public IActionResult LambdaExamples()
       {
          Func<double, double> Square = (x) => x * x;
